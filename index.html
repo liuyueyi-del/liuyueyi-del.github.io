@@ -218,7 +218,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2026-03-18 15:25:27 / 修改时间：16:56:22" itemprop="dateCreated datePublished" datetime="2026-03-18T15:25:27+08:00">2026-03-18</time>
+              <time title="创建时间：2026-03-18 15:25:27 / 修改时间：17:23:45" itemprop="dateCreated datePublished" datetime="2026-03-18T15:25:27+08:00">2026-03-18</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,7 +241,24 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>I love xjtu</p>
+          <p>由于使用不同架构的GPU进行说明极易混淆，以下图片均为从英伟达白皮书中获得的V100架构图。</p>
+<h1 id="硬件架构"><a href="#硬件架构" class="headerlink" title="硬件架构"></a>硬件架构</h1><p>首先我们需要了解下GPU整体架构：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318170127468.png" alt="image-20260318170127468"></p>
+<p>其中的GPC和TPC上课并未设计，我们变从SM开始说起：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171010091.png" alt="image-20260318171010091"></p>
+<p>可以看到，一个SM中有四个以下模块(SM Sub-core)，该模块中的一个代表性元件便是Warp Schedule：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171250561.png" alt="image-20260318171250561"></p>
+<p>在warp模块中，有32个core和若干其他计算模块。</p>
+<p>至此，我们已经梳理清楚了整个硬件架构：</p>
+<h3 id="GPU-gt-GPC-gt-TPC-gt-SM-gt-SM-Sub-core-gt-Core"><a href="#GPU-gt-GPC-gt-TPC-gt-SM-gt-SM-Sub-core-gt-Core" class="headerlink" title="GPU-&gt;(GPC)-&gt;(TPC)-&gt;SM-&gt;SM Sub-core-&gt;Core"></a>GPU-&gt;(GPC)-&gt;(TPC)-&gt;SM-&gt;SM Sub-core-&gt;Core</h3><h1 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h1><p>在真实cuda编程中，我们也有与硬件对应的几个架构：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171530820.png" alt="image-20260318171530820"></p>
+<p>分别是：</p>
+<h3 id="Grid-gt-Block-gt-Warp-gt-Thread"><a href="#Grid-gt-Block-gt-Warp-gt-Thread" class="headerlink" title="Grid-&gt;Block-&gt;Warp-&gt;Thread"></a>Grid-&gt;Block-&gt;Warp-&gt;Thread</h3><p>一般来说，我们的对应关系是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Grid &lt;--&gt; GPU</span><br><span class="line">Block &lt;--&gt; SM</span><br><span class="line">Warp &lt;--&gt; SM Sub-core</span><br><span class="line">Thread &lt;--&gt; Core</span><br></pre></td></tr></table></figure>
+<p>注意：一个SM Sub-core里面可以存储若干个warp的命令（堆积在Registerfile中），但是每一次会由warp scheduler调用一个运行，每一个warp都只能用同一个命令</p>
+<h1 id="内存路径"><a href="#内存路径" class="headerlink" title="内存路径"></a>内存路径</h1><p>我们不妨直接看前面的英伟达官方的图：</p>
+<p>可以看到，有L2 Cache，L1 Cache（shared memory）和 Register File</p>
+<p>它们分别隶属于：整个GPU，SM，和SM sub-core</p>
 
       
     </div>

@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>GPU工作原理</title>
+    <url>/2026/03/18/GPU%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</url>
+    <content><![CDATA[<p>由于使用不同架构的GPU进行说明极易混淆，以下图片均为从英伟达白皮书中获得的V100架构图。</p>
+<h1 id="硬件架构"><a href="#硬件架构" class="headerlink" title="硬件架构"></a>硬件架构</h1><p>首先我们需要了解下GPU整体架构：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318170127468.png" alt="image-20260318170127468"></p>
+<p>其中的GPC和TPC上课并未设计，我们变从SM开始说起：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171010091.png" alt="image-20260318171010091"></p>
+<p>可以看到，一个SM中有四个以下模块(SM Sub-core)，该模块中的一个代表性元件便是Warp Schedule：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171250561.png" alt="image-20260318171250561"></p>
+<p>在warp模块中，有32个core和若干其他计算模块。</p>
+<p>至此，我们已经梳理清楚了整个硬件架构：</p>
+<h3 id="GPU-gt-GPC-gt-TPC-gt-SM-gt-SM-Sub-core-gt-Core"><a href="#GPU-gt-GPC-gt-TPC-gt-SM-gt-SM-Sub-core-gt-Core" class="headerlink" title="GPU-&gt;(GPC)-&gt;(TPC)-&gt;SM-&gt;SM Sub-core-&gt;Core"></a>GPU-&gt;(GPC)-&gt;(TPC)-&gt;SM-&gt;SM Sub-core-&gt;Core</h3><h1 id="软件架构"><a href="#软件架构" class="headerlink" title="软件架构"></a>软件架构</h1><p>在真实cuda编程中，我们也有与硬件对应的几个架构：</p>
+<p><img src="/Users/mix/Library/Application Support/typora-user-images/image-20260318171530820.png" alt="image-20260318171530820"></p>
+<p>分别是：</p>
+<h3 id="Grid-gt-Block-gt-Warp-gt-Thread"><a href="#Grid-gt-Block-gt-Warp-gt-Thread" class="headerlink" title="Grid-&gt;Block-&gt;Warp-&gt;Thread"></a>Grid-&gt;Block-&gt;Warp-&gt;Thread</h3><p>一般来说，我们的对应关系是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Grid &lt;--&gt; GPU</span><br><span class="line">Block &lt;--&gt; SM</span><br><span class="line">Warp &lt;--&gt; SM Sub-core</span><br><span class="line">Thread &lt;--&gt; Core</span><br></pre></td></tr></table></figure>
+<p>注意：一个SM Sub-core里面可以存储若干个warp的命令（堆积在Registerfile中），但是每一次会由warp scheduler调用一个运行，每一个warp都只能用同一个命令</p>
+<h1 id="内存路径"><a href="#内存路径" class="headerlink" title="内存路径"></a>内存路径</h1><p>我们不妨直接看前面的英伟达官方的图：</p>
+<p>可以看到，有L2 Cache，L1 Cache（shared memory）和 Register File</p>
+<p>它们分别隶属于：整个GPU，SM，和SM sub-core</p>
+]]></content>
+      <categories>
+        <category>校内资料</category>
+      </categories>
+      <tags>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2026/03/18/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -13,17 +42,5 @@
 <h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
 ]]></content>
-  </entry>
-  <entry>
-    <title>GPU工作原理</title>
-    <url>/2026/03/18/GPU%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86/</url>
-    <content><![CDATA[<p>I love xjtu</p>
-]]></content>
-      <categories>
-        <category>校内资料</category>
-      </categories>
-      <tags>
-        <tag>深度学习</tag>
-      </tags>
   </entry>
 </search>
